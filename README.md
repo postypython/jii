@@ -49,11 +49,16 @@ Sample usage:
 
 	Yii::app()->jii->addParam('object', $object);
 	
-	Yii::app()->clientScript->registerScript('jii', Yii::app()->jii->getScript(), CClientScript::POS_END);
-
 ```
 
+Adding Jii to your page can be done as follows:
+```php
+Yii::app()->clientScript->registerScript('jii', Yii::app()->jii->getScript(), CClientScript::POS_END);
+```
+
+---CActiveRecord
 As regards model instances, you can select which attributes you want Javascript have access to by adding the following method to the model instance ...
+
 ```php
 	public function getJsonizeables()
 	{
@@ -67,5 +72,7 @@ As regards model instances, you can select which attributes you want Javascript 
 ```
 ... and then use the following to add it to Jii:
 ```php
-	Yii::app()->jii->addModel('model', $model);
+	$jsonized_model = Yii::app()->jii->jsonize($model);
+
+	Yii::app()->jii->addModel('model', $jsonized_model);
 ```
