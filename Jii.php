@@ -3,13 +3,15 @@ class Jii extends CComponent
 {
 	private  $_jsonizer;
 	
-	private $_obj = 'var Jii = {params: {{params}}, models: {{models}}, urls: {{urls}}}';
+	private $_obj = 'var Jii = {params: {{params}}, models: {{models}}, urls: {{urls}}, functions: {{functions}}}';
 	
 	private $_models = array();
 	
 	private $_params = array();
 	
 	private $_urls = array();
+
+	private $_functions = array();
 	
 	public function init()
 	{
@@ -24,6 +26,11 @@ class Jii extends CComponent
 	public function addModel($name, $data)
 	{
 		$this->_models[$name] = $data;
+	}
+
+	public function addFunction($name, $code)
+	{
+		$this->_functions[$name] = $code;
 	}
 	
 	/**
@@ -96,7 +103,7 @@ class Jii extends CComponent
 	
 	public function getScript()
 	{
-		$models = $params = $urls = '';
+		$models = $params = $urls = $functions = '';
 		
 		if (!empty($this->_params)) {
 			foreach($this->_params as $name => $data) {
@@ -119,7 +126,14 @@ class Jii extends CComponent
 			$urls = substr($urls, 0, -2);
 		}
 
-		$this->_obj = str_replace(array('{models}', '{params}', '{urls}'), array($models, $params, $urls), $this->_obj);
+		if (!empty($this->_functions)) {
+			foreach($this->_functions as $name => $code) {
+				$functions .= "$name: " . $code . ',' . PHP_EOL;
+			}
+			$functions = substr($functions, 0, -2);
+		}
+
+		$this->_obj = str_replace(array('{models}', '{params}', '{urls}', '{functions}'), array($models, $params, $urls, $functions), $this->_obj);
 		
 		return $this->_obj;
 	}
