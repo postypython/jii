@@ -51,6 +51,8 @@ Copy Jii.php to /path/to/application/protected/components. Add the following lin
 	Yii::app()->jii->addParam('numeric_array', array(0, 1, -39, -938.2223, '<a href="#">Prova</a>', true));
 
 	Yii::app()->jii->addParam('object', $object);
+
+	Yii::app()->jii->addFunction('function', 'function(){ alert("This is an alert!"); }');
 	
 ```
 ## Add Jii to your dynamic page
