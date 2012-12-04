@@ -8,7 +8,8 @@ Jii object has the following form:
 	var Jii = {
 		params: {},
 		models: {},
-		urls: {}
+		urls: {},
+        functions: {}
 	}	
 ```
 
