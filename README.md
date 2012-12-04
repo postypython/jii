@@ -1,4 +1,4 @@
-jii
+Jii
 ===
 Javascript variables and object wrapper for Yii.
 You can use it to convert Php variables (numbers, strings, booleans, array, objects) that you need to pass to Javascript.
