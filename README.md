@@ -1,8 +1,8 @@
-Jii
-===
+Jii - Yii to Javascript converter
+===============================
 Javascript variables and object wrapper for Yii.
-You can use it to convert Php variables (numbers, strings, booleans, array, objects) that you need to pass to Javascript.
-A global Jii object will be created and it will contains what you added.
+You can use it to convert PHP variables (numbers, strings, booleans, array, objects) to their Javascript equivalents.
+A global Jii object will be created on the javascript global scope and it will contain everything you add.
 Jii object has the following form:
 ```javascript
 	var Jii = {
@@ -13,10 +13,10 @@ Jii object has the following form:
 	}	
 ```
 
-You can add params, models, or urls as follows.
+You can add params, models, urls or functions as follows. Notice that type casting from PHP to Javascript is available only for params.
 
 ## Configuring Yii
-Copy Jii.php to /path/to/application/protected/components. Add the following lines to your config/main.php:
+Copy Jii.php to /path/to/application/protected/components and add the following lines to your config/main.php:
 ```php
     'components' => array(
         ...
@@ -30,6 +30,7 @@ Copy Jii.php to /path/to/application/protected/components. Add the following lin
 ## Sample usage
 ```php
 	
+	// adding params
 	Yii::app()->jii->addParam('integer', 10);
 
 	Yii::app()->jii->addParam('unsigned_integer', -10);
@@ -44,14 +45,16 @@ Copy Jii.php to /path/to/application/protected/components. Add the following lin
 
 	Yii::app()->jii->addParam('string', '<h1>Title</h1><a href="#">link</a>');
 	
-	Yii::app()->jii->addUrl('view_test_url', $this->createUrl('test/view', array('id' => 1)));
+	Yii::app()->jii->addParam('associative_array', array('goofy' => 3409879, '+349287//' => '<a>link</a>'));
 
-	Yii::app()->jii->addParam('associative_array', array('pippo' => 3409879, '+349287//' => '<a>link</a>'));
-
-	Yii::app()->jii->addParam('numeric_array', array(0, 1, -39, -938.2223, '<a href="#">Prova</a>', true));
+	Yii::app()->jii->addParam('numeric_array', array(0, 1, -39, -938.2223, '<a href="#">Test</a>', true));
 
 	Yii::app()->jii->addParam('object', $object);
 
+	// adding urls
+	Yii::app()->jii->addUrl('view_test_url', $this->createUrl('test/view', array('id' => 1)));
+
+	// adding functions
 	Yii::app()->jii->addFunction('function', 'function(){ alert("This is an alert!"); }');
 	
 ```
@@ -62,7 +65,7 @@ Adding Jii to your page can be done as follows:
 ```
 
 ## Adding CActiveRecord to Jii
-As regards CActiveRecord instances (or instances of classes inheriting from CModel), you can select which attribute you want Javascript have access to by adding the following method to the CActiveRecord class file ...
+As regards CActiveRecord instances (or class instances inheriting from CModel), you can select which attribute you want Javascript have access to by adding the following method to the CActiveRecord class file ...
 
 ```php
 	...
@@ -80,5 +83,6 @@ As regards CActiveRecord instances (or instances of classes inheriting from CMod
 ```php
 	$jsonized_model = Yii::app()->jii->jsonize($model);
 
+	// adding models to jii
 	Yii::app()->jii->addModel('model', $jsonized_model);
 ```
