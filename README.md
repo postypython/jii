@@ -1,6 +1,5 @@
 jii
 ===
-
 Javascript variables and object wrapper for Yii.
 You can use it to convert Php variables (numbers, strings, booleans, array, objects) that you need to pass to Javascript.
 A global Jii object will be created and it will contains what you added.
@@ -15,16 +14,15 @@ Jii object has the following form:
 
 You can add params, models, or urls as follows.
 
-Copy Jii.php to /path/to/application/protected/components
-
-Add the following lines to your config/main.php:
+## Configuring Yii
+Copy Jii.php to /path/to/application/protected/components. Add the following lines to your config/main.php:
 ```php
 	'jii' => array(
 		'class' => 'Jii',
 	),
 ```
 
-Sample usage:
+## Sample usage
 ```php
 	
 	Yii::app()->jii->addParam('integer', 10);
@@ -50,14 +48,14 @@ Sample usage:
 	Yii::app()->jii->addParam('object', $object);
 	
 ```
-
+## Add Jii to your dynamic page
 Adding Jii to your page can be done as follows:
 ```php
-Yii::app()->clientScript->registerScript('jii', Yii::app()->jii->getScript(), CClientScript::POS_END);
+	Yii::app()->clientScript->registerScript('jii', Yii::app()->jii->getScript(), CClientScript::POS_END);
 ```
 
----CActiveRecord
-As regards model instances, you can select which attributes you want Javascript have access to by adding the following method to the model instance ...
+## Adding CActiveRecord to Jii
+As regards CActiveRecord instances (or instances of classes inheriting from CModel), you can select which attribute you want Javascript have access to by adding the following method to the CActiveRecord class file ...
 
 ```php
 	...
@@ -71,7 +69,7 @@ As regards model instances, you can select which attributes you want Javascript 
 	}
 	...
 ```
-... and then use the following to add it to Jii:
+... and then you can use the following code to add it to Jii:
 ```php
 	$jsonized_model = Yii::app()->jii->jsonize($model);
 
