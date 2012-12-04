@@ -60,6 +60,7 @@ Yii::app()->clientScript->registerScript('jii', Yii::app()->jii->getScript(), CC
 As regards model instances, you can select which attributes you want Javascript have access to by adding the following method to the model instance ...
 
 ```php
+	...
 	public function getJsonizeables()
 	{
 		return array(
@@ -68,7 +69,7 @@ As regards model instances, you can select which attributes you want Javascript 
 			'attribute4',
 		);
 	}
-
+	...
 ```
 ... and then use the following to add it to Jii:
 ```php
