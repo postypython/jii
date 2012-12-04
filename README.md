@@ -17,13 +17,12 @@ You can add params, models, or urls as follows.
 ## Configuring Yii
 Copy Jii.php to /path/to/application/protected/components. Add the following lines to your config/main.php:
 ```php
-    ...
     'components' => array(
-    ...
-	'jii' => array(
-		'class' => 'Jii',
-	),
-    ...
+        ...
+	    'jii' => array(
+		    'class' => 'Jii',
+	    ),
+        ...
     ),
 ```
 
