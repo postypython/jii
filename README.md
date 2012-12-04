@@ -26,4 +26,46 @@ Add the following lines to your config/main.php:
 
 Sample usage:
 ```php
+	
+	Yii::app()->jii->addParam('integer', 10);
+
+	Yii::app()->jii->addParam('unsigned_integer', -10);
+
+	Yii::app()->jii->addParam('unsigned_float', 451.239873);
+
+	Yii::app()->jii->addParam('signed_float', -309.0092927);
+
+	Yii::app()->jii->addParam('bool_false', false);
+
+	Yii::app()->jii->addParam('bool_true', true);
+
+	Yii::app()->jii->addParam('string', '<h1>Title</h1><a href="#">link</a>');
+	
+	Yii::app()->jii->addUrl('view_test_url', $this->createUrl('test/view', array('id' => 1)));
+
+	Yii::app()->jii->addParam('associative_array', array('pippo' => 3409879, '+349287//' => '<a>link</a>'));
+
+	Yii::app()->jii->addParam('numeric_array', array(0, 1, -39, -938.2223, '<a href="#">Prova</a>', true));
+
+	Yii::app()->jii->addParam('object', $object);
+	
+	Yii::app()->clientScript->registerScript('jii', Yii::app()->jii->getScript(), CClientScript::POS_END);
+
+```
+
+As regards model instances, you can select which attributes you want Javascript have access to by adding the following method to the model instance ...
+```php
+	public function getJsonizeables()
+	{
+		return array(
+			'attribute1',
+			'attribute3',
+			'attribute4',
+		);
+	}
+
+```
+... and then use the following to add it to Jii:
+```php
+	Yii::app()->jii->addModel('model', $model);
 ```
