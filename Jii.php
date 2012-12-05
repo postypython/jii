@@ -15,6 +15,8 @@ class Jii extends CComponent
 	
 	public function init()
 	{
+		// Yii::import('system.web.helpers.CJavascript');
+
 		$this->_jsonizer = new Jsonizer();
 	}
 	
@@ -73,7 +75,7 @@ class Jii extends CComponent
 	
 	private function _toJsPrimitive($value)
 	{
-		if (is_numeric($value)) {
+	/*	if (is_numeric($value)) {
 			return $value;
 		}
 
@@ -89,7 +91,8 @@ class Jii extends CComponent
 			return '"' . $value . '"';
 
 		}
-
+	*/
+		return CJavaScript::encode($value);
 	}
 
 	private function _isAssoc($arr)
@@ -141,19 +144,30 @@ class Jii extends CComponent
 
 class Jsonizer
 {
+	/**
+	* Converts a CActiveRecord instance into an array
+	* @param CActiveRecord $model
+	* @return array $model
+	*/
 	private function _jsonizeOne($model)
 	{
+		
 		// for each model we store only jsonizeables attributes
+		$attributes 	= array();
 		$jsonizeables 	= array();
 
+		// we select which attributes must be jsonized
 		if (method_exists($model, 'jsonizeables')) {
-			foreach ($model->jsonizeables() as $jsonizeable) {
-				$jsonizeables[$jsonizeable] = $model->$jsonizeable;
-			}
-
+			$attributes = $model->getJsonizeables();
+		
 		// we get all model attributes if no jsonizeables attributes have been found
 		} else {
-			$jsonizeables = $model->getAttributes();
+			$attributes = array_keys($model->getAttributes());
+		}
+
+		// we encode each attribute into a javascript variable
+		foreach ($attributes as $attribute_name) {
+			$jsonizeables[$attribute_name] = $model->$attribute_name;
 		}
 
 		// basic inheritance detection
@@ -181,40 +195,17 @@ class Jsonizer
 		return $modelArray;			
 	}	
 	
+	/**
+	* Converts an array of CActiveRecord instances into a php array
+	* @param array $models
+	* @return array 
+	*/
 	private function _jsonize($models)
 	{				
 		$modelArray = array();
 		
-		$i=0;
 		foreach ($models as $model) {
-			// for each model we store only jsonizeables attributes
-			$attributes = array();
-			foreach ($model->getJsonizeables() as $jsonizeable) {
-				$attributes[$jsonizeable] = $model->$jsonizeable;
-			}
-			 
-			// basic inheritance detection
-			if ($this->_isParent('CModel', $model)) {					
-				$modelArray[$i] = $attributes;			
-				if (method_exists($model, 'relations')) {
-					$relations = array_keys($model->relations());			
-					foreach ($relations as $relation) {				 
-						if ($model->hasRelated($relation)) {
-							if (isset($model->$relation)) {
-								if (is_array($model->$relation)) {
-									$modelArray[$i][$relation] = $this_jsonize($model->$relation);
-								} else {
-									$relAttrs = $model->$relation->getAttributes();
-									foreach ($relAttrs as $attr => $val){
-										$modelArray[$i][$relation][$attr] = $val;
-									}
-								}
-							}
-						}
-					}
-				}
-				$i++;
-			} 
+			$modelArray[] = $this->_jsonizeOne($model);
 		}
 		
 		return $modelArray;
@@ -231,6 +222,11 @@ class Jsonizer
 		return false;
 	}
 	
+	/**
+	* Converts CModel instances into JSON objects
+	* @param CModel $data
+	* @return string $json
+	*/
 	public function jsonize($data)
 	{
 		if (is_array($data)) {
