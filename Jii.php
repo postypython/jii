@@ -15,8 +15,6 @@ class Jii extends CComponent
 	
 	public function init()
 	{
-		// Yii::import('system.web.helpers.CJavascript');
-
 		$this->_jsonizer = new Jsonizer();
 	}
 	
@@ -75,23 +73,6 @@ class Jii extends CComponent
 	
 	private function _toJsPrimitive($value)
 	{
-	/*	if (is_numeric($value)) {
-			return $value;
-		}
-
-		if (is_bool($value)) {
-			return $value ? 'true' : 'false';
-		}
-
-		if (is_string($value)) {
-
-			// escapes double quotes
-			$value = str_replace('"', '\"', $value);
-
-			return '"' . $value . '"';
-
-		}
-	*/
 		return CJavaScript::encode($value);
 	}
 
