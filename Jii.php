@@ -138,7 +138,7 @@ class Jsonizer
 		$jsonizeables 	= array();
 
 		// we select which attributes must be jsonized
-		if (method_exists($model, 'jsonizeables')) {
+		if (method_exists($model, 'getJsonizeables')) {
 			$attributes = $model->getJsonizeables();
 		
 		// we get all model attributes if no jsonizeables attributes have been found
