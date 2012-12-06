@@ -150,17 +150,24 @@ class Jsonizer
 		foreach ($attributes as $attribute_name) {
 			$jsonizeables[$attribute_name] = $model->$attribute_name;
 		}
-
+		 
 		// basic inheritance detection
-		if ($this->_isParent('CModel', $model)) {					
+		if ($this->_isParent('CModel', $model)) {
 			$modelArray = $jsonizeables;			
 			if (method_exists($model, 'relations')) {
 				$relations = array_keys($model->relations());			
-				foreach ($relations as $relation) {				 
+				foreach ($relations as $relation) {
 					if ($model->hasRelated($relation)) {
 						if (isset($model->$relation)) {
 							if (is_array($model->$relation)) {
-								$modelArray[$relation] = $this_jsonize($model->$relation);
+									if (!empty($model->$relation)) {
+										foreach($model->$relation as $related) {
+											$modelArray[$relation][] = $this->_jsonizeOne($related);
+									 	}
+									} else 
+										$modelArray[$relation][] = array();
+									}
+
 							} else {
 								$relAttrs = $model->$relation->getAttributes();
 								foreach ($relAttrs as $attr => $val){
@@ -172,7 +179,7 @@ class Jsonizer
 				}
 			}
 		}
-		
+	
 		return $modelArray;			
 	}	
 	
@@ -182,7 +189,7 @@ class Jsonizer
 	* @return array 
 	*/
 	private function _jsonize($models)
-	{				
+	{	
 		$modelArray = array();
 		
 		foreach ($models as $model) {
