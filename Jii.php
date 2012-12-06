@@ -158,23 +158,20 @@ class Jsonizer
 				$relations = array_keys($model->relations());			
 				foreach ($relations as $relation) {
 					if ($model->hasRelated($relation)) {
-						if (isset($model->$relation)) {
-							if (is_array($model->$relation)) {
-									if (!empty($model->$relation)) {
-										foreach($model->$relation as $related) {
-											$modelArray[$relation][] = $this->_jsonizeOne($related);
-									 	}
-									} else {
-										$modelArray[$relation][] = array();
-									}
-
-							} else {
-								$relAttrs = $model->$relation->getAttributes();
-								foreach ($relAttrs as $attr => $val){
-									$modelArray[$relation][$attr] = $val;
+						$related_models = $model->getRelated($relation);
+						if (is_array($related_models)) {
+								if (!empty($related_models)) {
+									foreach($related_models as $related) {
+										$modelArray[$relation][] = $this->_jsonizeOne($related);
+								 	}
+								} else {
+									$modelArray[$relation][] = array();
 								}
-							}
+
+						} else {
+							$modelArray[$relation] = $this->_jsonizeOne($related_models);
 						}
+						 
 					}
 				}
 			}
