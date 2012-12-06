@@ -164,7 +164,7 @@ class Jsonizer
 										foreach($model->$relation as $related) {
 											$modelArray[$relation][] = $this->_jsonizeOne($related);
 									 	}
-									} else 
+									} else {
 										$modelArray[$relation][] = array();
 									}
 
