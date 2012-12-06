@@ -65,16 +65,16 @@ Adding Jii to your page can be done as follows:
 ```
 
 ## Adding CActiveRecord to Jii
-As regards CActiveRecord instances (or class instances inheriting from CModel), you can select which attribute you want Javascript have access to by adding the following method to the CActiveRecord class file ...
+As regards CActiveRecord instances (or class instances inheriting from CModel), you can select which attribute you want Javascript have access to by adding the following method to each of the CActiveRecord class files you wish to convert ...
 
 ```php
 	...
 	public function getJsonizeables()
 	{
 		return array(
-			'attribute1',
-			'attribute3',
-			'attribute4',
+			'attribute_label_1',
+			'attribute_label_3',
+			'attribute_label_4',
 		);
 	}
 	...
