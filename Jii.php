@@ -155,21 +155,39 @@ class Jsonizer
 		if ($this->_isParent('CModel', $model)) {
 			$modelArray = $jsonizeables;			
 			if (method_exists($model, 'relations')) {
-				$relations = array_keys($model->relations());			
+				$relations = array_keys($model->relations());
+
 				foreach ($relations as $relation) {
 					if ($model->hasRelated($relation)) {
+
 						$related_models = $model->getRelated($relation);
-						if (is_array($related_models)) {
-								if (!empty($related_models)) {
-									foreach($related_models as $related) {
-										$modelArray[$relation][] = $this->_jsonizeOne($related);
-								 	}
-								} else {
-									$modelArray[$relation][] = array();
-								}
+						
+						if ($related_models !== null) {
+							
+							if (is_array($related_models)) {
+								
+									if (!empty($related_models)) {
+										foreach($related_models as $related) {
+	 
+											$modelArray[$relation][] = $this->_jsonizeOne($related);
+											// print_r($this->_jsonizeOne($related));
+									 	}
+									} else {
+
+										$modelArray[$relation][] = array();
+										
+									}
+
+							} else {
+								 
+								// print_r($related_models->getAttributes());
+								$modelArray[$relation] = $this->_jsonizeOne($related_models);
+							}
 
 						} else {
-							$modelArray[$relation] = $this->_jsonizeOne($related_models);
+							
+							$modelArray[$relation] = null;
+
 						}
 						 
 					}
@@ -177,6 +195,7 @@ class Jsonizer
 			}
 		}
 	
+		// print_r($modelArray);
 		return $modelArray;			
 	}	
 	
@@ -188,9 +207,11 @@ class Jsonizer
 	private function _jsonize($models)
 	{	
 		$modelArray = array();
-		
+		$i = 0;
+		 
 		foreach ($models as $model) {
-			$modelArray[] = $this->_jsonizeOne($model);
+			$model->getAttributes();
+			$modelArray[$i++] = $this->_jsonizeOne($model);
 		}
 		
 		return $modelArray;
