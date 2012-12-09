@@ -2,10 +2,10 @@ Jii - Yii to Javascript converter
 ===============================
 Javascript variables and object wrapper for Yii.
 You can use it to convert PHP variables (numbers, strings, booleans, array, objects) to their Javascript equivalents.
-A global Jii object will be created on the javascript global scope and it will contain everything you add.
+A *jii* object will be created on the javascript global scope and it will contain everything you add.
 Jii object has the following form:
 ```javascript
-	var Jii = {
+	jii = {
 		params: {},
 		models: {},
 		urls: {},
