@@ -3,7 +3,7 @@ class Jii extends CComponent
 {
 	private  $_jsonizer;
 	
-	private $_obj = 'var Jii = {params: {{params}}, models: {{models}}, urls: {{urls}}, functions: {{functions}}}';
+	private $_obj = '(function (){ window.Jii = {params: {{params}}, models: {{models}}, urls: {{urls}}, functions: {{functions}}}())';
 	
 	private $_models = array();
 	
