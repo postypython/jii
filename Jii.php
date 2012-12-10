@@ -235,6 +235,11 @@ class Jsonizer
 	*/
 	public function jsonize($data)
 	{
+		// support for CActiveDataProvider
+		if ($data instanceof CActiveDataProvider) {
+			$data = $data->getData();
+		}
+		
 		if (is_array($data)) {
 			return json_encode($this->_jsonize($data));
 		} else {
