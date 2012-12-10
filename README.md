@@ -14,7 +14,6 @@ Jii object has the following form:
 ```
 
 You can add params, models, urls or functions as follows. Notice that type casting from PHP to Javascript is available only for params.
-
 ## Configuring Yii
 Copy Jii.php to /path/to/application/protected/components and add the following lines to your config/main.php:
 ```php
@@ -79,7 +78,7 @@ As regards CActiveRecord instances (or class instances inheriting from CModel), 
 	}
 	...
 ```
-... and then you can use the following code to add it to Jii:
+... and then you can use the following code to add it to Jii (support for CActiveDataProvider has been added):
 ```php
 	$jsonized_model = Yii::app()->jii->jsonize($model);
 
