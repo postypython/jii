@@ -13,6 +13,19 @@ Jii object has the following form:
 	}	
 ```
 
+## Jii Models
+Each of the models you will add, will be represented by a Javascript object providing the following methods:
+```javascript
+	// number of items
+	jii.models.model_name_1.count();
+
+	// if model is an array of models you can add items in the following way
+	jii.models.model_name_1.add({object});
+
+	// returns the first object matching selected attribute value
+	jii.models.model_name_1.findByAttribute({attribute: "name", value: value});
+```
+
 You can add params, models, urls or functions as follows. Notice that type casting from PHP to Javascript is available only for params.
 ## Configuring Yii
 Copy Jii.php to /path/to/application/protected/components and add the following lines to your config/main.php:
