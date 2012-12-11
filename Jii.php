@@ -3,7 +3,89 @@ class Jii extends CComponent
 {
 	private  $_jsonizer;
 	
-	private $_obj = '(function (){ window[\'jii\'] = {params: {{params}}, models: {{models}}, urls: {{urls}}, functions: {{functions}}}}())';
+	private $_obj = '(function (){
+		
+		window["jii"] = {}; 
+		
+		window["jii"]["Model"] = function(){	 
+			var array = arguments[0] instanceof Array ? true : false;
+			this.count = function(){
+				var counter = 0;
+			 	if (array) {
+					for (var attr in this) {
+						if (isNaN(parseInt(attr, 10)) === false) {
+							counter++;
+						}
+					}
+				} else {
+					counter = 1;
+				}
+				return counter;
+			};
+
+			if (array) {
+				this.add = function(){
+					this[this.count()] = arguments[0];
+				};
+			}
+			for (var attr in arguments[0]) {
+				this[attr] = arguments[0][attr];
+			}
+		}
+		
+		/**
+		* function findByAttribute
+		* @param object {attribute: "attr", value: val}
+		* @return Model
+		*/
+		window["jii"]["Model"].prototype.findByAttribute = function(){
+			if (typeof arguments[0] === "undefined") {
+				throw Error("You must provide both attribute and value");
+			}		 
+			var source 	  = this,
+				cnt 	  = this.count(),
+				i 		  = 0,
+				attribute = arguments[0].attribute,
+				value	  = arguments[0].value;
+
+				if (cnt > 1) {
+					for (i=0; i < cnt; i++) {					 
+						if (source[i][attribute] === value) {
+							return source[i];
+							break;
+						}
+					}
+				} else {		 
+					if (source[attribute] === value) {
+						return source; 
+					}
+				}
+				
+				
+				return null;
+		}
+		
+		window["jii"]["Model"].prototype.getObservable = function(){
+			if (typeof ko ==="undefined") {
+				throw Error("ko has not been found");	
+			}
+			
+			if (isArray(this)){
+				return ko.observableArray(this);
+			} else {
+				return ko.observable(this);
+			}
+		}
+		
+		window["jii"].params = {{params}};
+		
+		window["jii"].models = {{models}};
+		
+		window["jii"].urls	 = {{urls}};
+		
+		window["jii"].functions = {{functions}};				
+		
+	}())';		
 	
 	private $_models = array();
 	
@@ -37,32 +119,32 @@ class Jii extends CComponent
 	* Converts a Php variable into a Javscript one
 	*/
 	public function addParam($name, $value)
-	{
-		if (is_object($value) || $this->_isAssoc($value)) {
+	{		 
+		if (!is_array($value)) {
 
-			$this->_params[$name] = json_encode($value);
+			$this->_params[$name] = $this->_toJsPrimitive($value);
 
 		} else {
-
-			if (!is_array($value)) {
-
-				$this->_params[$name] = $this->_toJsPrimitive($value);
-
+			
+			if (is_object($value) || $this->_isAssoc($value)) {
+	
+				$this->_params[$name] = json_encode($value);
+	
 			} else {
 
-					$array = '[{items}]';
+				$array = '[{items}]';
 
-					$items_string = '';
+				$items_string = '';
 
-					foreach ($value as $item) {
-						$items_string .= $this->_toJsPrimitive($item) . ',';
-					}
+				foreach ($value as $item) {
+					$items_string .= $this->_toJsPrimitive($item) . ',';
+				}
 
-					$items_string = substr($items_string, 0, -1);
+				$items_string = substr($items_string, 0, -1);
 
-					$array = str_replace('{items}', $items_string, $array);
+				$array = str_replace('{items}', $items_string, $array);
 
-					$this->_params[$name] = $array;
+				$this->_params[$name] = $array;
 
 
 			}
@@ -90,17 +172,17 @@ class Jii extends CComponent
 		$models = $params = $urls = $functions = '';
 		
 		if (!empty($this->_params)) {
-			foreach($this->_params as $name => $data) {
-				$params .= "$name: " . $data . ',' . PHP_EOL;
+			foreach($this->_params as $name => $data) {				
+				$params .= "$name: " . $data .  ',' . PHP_EOL;
 			}
 			$params = substr($params, 0, -2);
 		}
 
 		if (!empty($this->_models)) {
-			foreach($this->_models as $name => $data) {
-				$models .= "$name: " . $data . ',' . PHP_EOL;
+			foreach($this->_models as $name => $data) {				
+				$models .= "$name: new window["jii"].Model(" . $data . '),' . PHP_EOL;
 			}
-			$models = substr($models, 0, -2);
+			$models = substr($models, 0, -2);			
 		}
 
 		if (!empty($this->_urls)) {
@@ -124,7 +206,8 @@ class Jii extends CComponent
 }
 
 class Jsonizer
-{
+{	
+	
 	/**
 	* Converts a CActiveRecord instance into an array
 	* @param CActiveRecord $model
@@ -247,5 +330,5 @@ class Jsonizer
 		}
 		
 	}	
-	
+		
 }
