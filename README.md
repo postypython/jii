@@ -1,16 +1,36 @@
-Jii - Yii to Javascript converter
+Jii 0.0.3beta 
 ===============================
-Javascript variables and object wrapper for Yii.
+Javascript library for Yii
 You can use it to convert PHP variables (numbers, strings, booleans, array, objects) to their Javascript equivalents.
 A *jii* object will be created on the javascript global scope and it will contain everything you add.
 Jii object has the following form:
 ```javascript
-	jii = {
-		params: {},
-		models: {},
-		urls: {},
-        functions: {}
-	}	
+jii = {
+    params: {},
+    models: {},
+    urls: {},
+    functions: {}
+}	
+```
+## Jii 0.0.3beta additions
+You can now configure jii to add *Knockout js* support:
+```php
+'components' => array(
+    ...
+    jii' => array(
+        'class' => 'Jii',
+        'config' => array(
+            'lib' => 'ko',
+        ),
+    ),
+    ...
+)
+```
+Knockout js support includes the following functions:
+```javascript
+// each function accept one object as argument
+jii.utils.observable();
+jii.utils.observableArray();
 ```
 
 ## Jii Models
