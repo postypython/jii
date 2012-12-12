@@ -7,8 +7,12 @@ class Jii extends CComponent
 		
 		window["jii"] = {}; 
 		
+		window["jii"]["utils"] = {};
+
 		window["jii"]["Model"] = function(){	 
-			var array = arguments[0] instanceof Array ? true : false;
+			var array 		= arguments[0] instanceof Array ? true : false;
+			var json_source = arguments[0];
+			
 			this.count = function(){
 				var counter = 0;
 			 	if (array) {
@@ -23,9 +27,14 @@ class Jii extends CComponent
 				return counter;
 			};
 
+			this.toJSON = function() {
+				return json_source;
+			}
+
 			if (array) {
 				this.add = function(){
 					this[this.count()] = arguments[0];
+					json_source[json_source.length] = arguments[0];
 				};
 			}
 			for (var attr in arguments[0]) {
@@ -65,18 +74,6 @@ class Jii extends CComponent
 				return null;
 		}
 		
-		window["jii"]["Model"].prototype.getObservable = function(){
-			if (typeof ko ==="undefined") {
-				throw Error("ko has not been found");	
-			}
-			
-			if (isArray(this)){
-				return ko.observableArray(this);
-			} else {
-				return ko.observable(this);
-			}
-		}
-		
 		window["jii"].params = {{params}};
 		
 		window["jii"].models = {{models}};
@@ -87,6 +84,34 @@ class Jii extends CComponent
 		
 	}())';		
 	
+	private $_ko_utils = '
+		window["jii"].utils.observable = function(){
+			if (typeof ko ==="undefined") {
+				throw Error("ko has not been found");	
+			}
+			return ko.observable(arguments[0]);
+		}
+		
+		window["jii"].utils.observableArray = function(){
+			if (typeof ko ==="undefined") {
+				throw Error("ko has not been found");	
+			}
+			return ko.observableArray(arguments[0].toJSON());
+		}
+
+		window["jii"].utils.getObservable = function(){
+			if (typeof ko ==="undefined") {
+				throw Error("ko has not been found");	
+			}
+
+			if (isArray(arguments[0])){
+				return ko.observableArray(arguments[0]);
+			} else {
+				return ko.observable(arguments[0]);
+			}
+		}
+	';
+
 	private $_models = array();
 	
 	private $_params = array();
@@ -95,6 +120,8 @@ class Jii extends CComponent
 
 	private $_functions = array();
 	
+	public $config;
+
 	public function init()
 	{
 		$this->_jsonizer = new Jsonizer();
@@ -105,8 +132,18 @@ class Jii extends CComponent
 		return $this->_jsonizer->jsonize($models);
 	}
 
+	/**
+	* Adds a model to Jii
+	* @param string $name the name of the jii object property
+	* @param mixed $data the model to be added
+	*/
 	public function addModel($name, $data)
 	{
+		// if we cannot decode JSON $data, we try to jsonize
+		if (json_decode($data) === null) {			 
+			$data = $this->jsonize($data);
+		}
+		 
 		$this->_models[$name] = $data;
 	}
 
@@ -180,7 +217,7 @@ class Jii extends CComponent
 
 		if (!empty($this->_models)) {
 			foreach($this->_models as $name => $data) {				
-				$models .= "$name: new window["jii"].Model(" . $data . '),' . PHP_EOL;
+				$models .= $name .': new window["jii"].Model(' . $data . '),' . PHP_EOL;
 			}
 			$models = substr($models, 0, -2);			
 		}
@@ -200,7 +237,18 @@ class Jii extends CComponent
 		}
 
 		$this->_obj = str_replace(array('{models}', '{params}', '{urls}', '{functions}'), array($models, $params, $urls, $functions), $this->_obj);
-		
+
+		// add utils based on configuration
+		$lib = isset($this->config['lib']) ? $this->config['lib'] : null;
+
+		if ($lib !== null) {
+			switch ($lib) {
+				case 'ko':
+					$this->_obj .= $this->_ko_utils;
+				break;
+			}
+		}
+
 		return $this->_obj;
 	}
 }
