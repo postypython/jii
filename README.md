@@ -33,14 +33,14 @@ jii.utils.observable();
 jii.utils.observableArray();
 ```
 ### Javascript Models
-On the client side, each model that you add with `Yii::app()->jii->addModel()` will expose the followin methods:
+On the client side, each model that you add with `Yii::app()->jii->addModel()` will expose the following methods:
 ```javascript
 /**
  * Finds one model instance based on the specified attribute
  * @param object {attribute: "attribute_name", value: attribute_value
  * @return object or null if none object is found
 */
-jii.models.you_model.findByAttribute();
+jii.models.your_model.findByAttribute();
 
 // the json representation of your model
 jii.models.your_model.toJSON();
