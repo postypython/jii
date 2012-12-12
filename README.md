@@ -1,29 +1,59 @@
-Jii - Yii to Javascript converter
+Jii 0.0.3beta 
 ===============================
-Javascript variables and object wrapper for Yii.
+Javascript library for Yii
 You can use it to convert PHP variables (numbers, strings, booleans, array, objects) to their Javascript equivalents.
 A *jii* object will be created on the javascript global scope and it will contain everything you add.
 Jii object has the following form:
 ```javascript
-	jii = {
-		params: {},
-		models: {},
-		urls: {},
-        functions: {}
-	}	
+jii = {
+    params: {},
+    models: {},
+    urls: {},
+    functions: {}
+}	
+```
+## Jii 0.0.3beta additions
+You can now configure jii to add *Knockout js* support:
+```php
+'components' => array(
+    ...
+    'jii' => array(
+        'class' => 'Jii',
+        'config' => array(
+            'lib' => 'ko',
+        ),
+    ),
+    ...
+)
+```
+Knockout js support includes the following functions:
+```javascript
+// each function accept one Model as argument
+jii.utils.observable();
+jii.utils.observableArray();
+```
+### Javascript Models
+On the client side, each model that you add with `Yii::app()->jii->addModel()` will expose the following methods:
+```javascript
+/**
+ * Finds one model instance based on the specified attribute
+ * @param object {attribute: "attribute_name", value: attribute_value
+ * @return object or null if none object is found
+*/
+jii.models.your_model.findByAttribute();
+
+// the json representation of your model
+jii.models.your_model.toJSON();
+
+// the number of model instances found
+jii.models.your_model.count();
 ```
 
-## Jii Models
-Each of the models you will add, will be represented by a Javascript object providing the following methods:
-```javascript
-	// number of items
-	jii.models.model_name_1.count();
-
-	// if model is an array of models you can add items in the following way
-	jii.models.model_name_1.add({object});
-
-	// returns the first object matching selected attribute value
-	jii.models.model_name_1.findByAttribute({attribute: "name", value: value});
+### Direct model or data provider jsonization
+You can directly encode models - and their relations - as well as data provider in the following way:
+```php
+$model = new Model();
+Yii::app()->jii->addModel('model', $model);
 ```
 
 You can add params, models, urls or functions as follows. Notice that type casting from PHP to Javascript is available only for params.
