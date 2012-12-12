@@ -17,7 +17,7 @@ You can now configure jii to add *Knockout js* support:
 ```php
 'components' => array(
     ...
-    jii' => array(
+    'jii' => array(
         'class' => 'Jii',
         'config' => array(
             'lib' => 'ko',
