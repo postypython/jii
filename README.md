@@ -32,8 +32,24 @@ Knockout js support includes the following functions:
 jii.utils.observable();
 jii.utils.observableArray();
 ```
+### Javascript Models
+On the client side, each model that you add with `Yii::app()->jii->addModel()` will expose the followin methods:
+```javascript
+/**
+ * Finds one model instance based on the specified attribute
+ * @param object {attribute: "attribute_name", value: attribute_value
+ * @return object or null if none object is found
+*/
+jii.models.you_model.findByAttribute();
 
-## Direct model or data provider jsonization
+// the json representation of your model
+jii.models.your_model.toJSON();
+
+// the number of model instances found
+jii.models.your_model.count();
+```
+
+### Direct model or data provider jsonization
 You can directly encode models - and their relations - as well as data provider in the following way:
 ```php
 $model = new Model();
