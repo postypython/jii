@@ -28,9 +28,16 @@ You can now configure jii to add *Knockout js* support:
 ```
 Knockout js support includes the following functions:
 ```javascript
-// each function accept one object as argument
+// each function accept one Model as argument
 jii.utils.observable();
 jii.utils.observableArray();
+```
+
+## Direct model or data provider jsonization
+You can directly encode models - and their relations - as well as data provider in the following way:
+```php
+$model = new Model();
+Yii::app()->jii->addModel('model', $model);
 ```
 
 ## Jii Models
