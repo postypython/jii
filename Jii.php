@@ -10,8 +10,8 @@ class Jii extends CComponent
 		window["jii"]["utils"] = {};
 
 		window["jii"]["Model"] = function(){	 
-			var array 		= arguments[0] instanceof Array ? true : false;
-			var json_source = arguments[0];
+			
+			var array = arguments[0] instanceof Array ? true : false;
 			
 			this.count = function(){
 				var counter = 0;
@@ -27,16 +27,29 @@ class Jii extends CComponent
 				return counter;
 			};
 
-			this.toJSON = function() {
-				return json_source;
+			/**
+			* Returns the Javascript representation of the Model object
+			* @param Model The model to decode
+			* @return object js_object the decoded model
+			*/
+			this.toJS = function() {
+				var js_object = {};
+
+				for (var attr in this) {
+					if (typeof this[attr] !== "function") {
+						js_object[attr] = this[attr];
+					}
+				}
+				return js_object;
 			}
 
+			// performs some initialization taks
 			if (array) {
 				this.add = function(){
 					this[this.count()] = arguments[0];
-					json_source[json_source.length] = arguments[0];
 				};
 			}
+			
 			for (var attr in arguments[0]) {
 				this[attr] = arguments[0][attr];
 			}
