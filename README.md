@@ -13,14 +13,14 @@ Copy Jii directory to /path/to/application/protected/components and add the foll
         ...
 	    'jii' => array(
 		    'class' => 'application.components.Jii.Jii',
-		    	// rem the following if you want to user the minified version
-		    	'script' => 'jii-0.0.4.js',
+		    	// uncomment the following if you do not want to use the minified version
+		    	// 'script' => 'jii-0.0.4.js',
 	    ),
         ...
     ),
 ```
 
-## Add Jii to your dynamic page
+## Add Jii to your page
 Adding Jii to your page can be done as follows:
 ```php
 	Yii::app()->clientScript->registerScript('jii', Yii::app()->jii->getScript(), CClientScript::POS_END);
@@ -74,12 +74,12 @@ You can add params, models, urls or functions as follows. Notice that type casti
 	
 ```
 
-## Adding binding (since 0.0.4)
+## Binding functions (since 0.0.4)
 You can add functions that will be executed once the page has finished loading in the followin way:
 ```php
 // the following function will be called once the document is ready
 Yii::app()->jii->addBindings('function(){
-	alert('Page loading has finished');
+	alert("Page loading has finished");
 }');
 ```
 
