@@ -1,4 +1,4 @@
-(function (window, ko){
+(function (window){
 	
 		// jii object
 	var jii 			= {},
@@ -166,38 +166,38 @@
 			return null;
 	}
 		
-	
-	// follow some utilities
-	jii.utils.observable = function(){
-		if (typeof ko ==="undefined") {
-			throw Error("ko has not been found");	
-		}
-		return ko.observable(arguments[0]);
-	}
-		
-	jii.utils.observableArray = function(){
-		if (typeof ko ==="undefined") {
-			throw Error("ko has not been found");	
-		}
-		return ko.observableArray(arguments[0].toJS());
-	}
-
-	jii.utils.getObservable = function(){
-		if (typeof ko ==="undefined") {
-			throw Error("ko has not been found");	
-		}
-
-		if (isArray(arguments[0])){
-			return ko.observableArray(arguments[0]);
-		} else {
+	if (typeof ko !== undefined) {
+		// follow some utilities
+		jii.utils.observable = function(){
+			if (typeof ko ==="undefined") {
+				throw Error("ko has not been found");	
+			}
 			return ko.observable(arguments[0]);
 		}
-	}
+			
+		jii.utils.observableArray = function(){
+			if (typeof ko ==="undefined") {
+				throw Error("ko has not been found");	
+			}
+			return ko.observableArray(arguments[0].toJS());
+		}
 
+		jii.utils.getObservable = function(){
+			if (typeof ko ==="undefined") {
+				throw Error("ko has not been found");	
+			}
+
+			if (isArray(arguments[0])){
+				return ko.observableArray(arguments[0]);
+			} else {
+				return ko.observable(arguments[0]);
+			}
+		}
+	}
 	// add Model constructor to jii
 	jii.Model = Model;
 
 	// makes jii available on the global scope
 	window.jii = jii;
 
-}(window, ko))
+}(window));

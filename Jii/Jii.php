@@ -158,7 +158,13 @@ class Jii extends CComponent
 				$bindings .= 'jii.bindings.bindings.push(' . $binding .');' . PHP_EOL;
 			}
 		}
-		 
+		
+		// clears everything after each call
+		$this->_params 		= array();
+		$this->_urls 		= array();
+		$this->_models 		= array();
+		$this->_bindings 	= array();
+		
 		return $urls . PHP_EOL . $params . PHP_EOL . $functions . PHP_EOL . $models . PHP_EOL . $bindings;	
 	}
 }
