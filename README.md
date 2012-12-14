@@ -1,37 +1,38 @@
-Jii 0.0.3beta 
+Jii 0.0.4
 ===============================
 Javascript library for Yii
 You can use it to convert PHP variables (numbers, strings, booleans, array, objects) to their Javascript equivalents.
 A *jii* object will be created on the javascript global scope and it will contain everything you add.
-Jii object has the following form:
-```javascript
-jii = {
-    params: {},
-    models: {},
-    urls: {},
-    functions: {}
-}	
-```
-## Jii 0.0.3beta additions
+
+## Jii 0.0.4 configuration
 You can now configure jii to add *Knockout js* support:
+## Configuring Yii
+Copy Jii directory to /path/to/application/protected/components and add the following lines to your config/main.php:
 ```php
-'components' => array(
-    ...
-    'jii' => array(
-        'class' => 'Jii',
-        'config' => array(
-            'lib' => 'ko',
-        ),
+    'components' => array(
+        ...
+	    'jii' => array(
+		    'class' => 'application.components.Jii.Jii',
+		    	// rem the following if you want to user the minified version
+		    	'script' => 'jii-0.0.4.js',
+	    ),
+        ...
     ),
-    ...
-)
 ```
-Knockout js support includes the following functions:
+
+## Add Jii to your dynamic page
+Adding Jii to your page can be done as follows:
+```php
+	Yii::app()->clientScript->registerScript('jii', Yii::app()->jii->getScript(), CClientScript::POS_END);
+```
+
+*Knockout js* support is automatically added to Jii and includes the following functions:
 ```javascript
 // each function accept one Model as argument
 jii.utils.observable();
 jii.utils.observableArray();
 ```
+
 ### Javascript Models
 On the client side, each model that you add with `Yii::app()->jii->addModel()` will expose the following methods:
 ```javascript
@@ -43,7 +44,7 @@ On the client side, each model that you add with `Yii::app()->jii->addModel()` w
 jii.models.your_model.findByAttribute();
 
 // the json representation of your model
-jii.models.your_model.toJSON();
+jii.models.your_model.toJS();
 
 // the number of model instances found
 jii.models.your_model.count();
@@ -57,41 +58,13 @@ Yii::app()->jii->addModel('model', $model);
 ```
 
 You can add params, models, urls or functions as follows. Notice that type casting from PHP to Javascript is available only for params.
-## Configuring Yii
-Copy Jii.php to /path/to/application/protected/components and add the following lines to your config/main.php:
-```php
-    'components' => array(
-        ...
-	    'jii' => array(
-		    'class' => 'Jii',
-	    ),
-        ...
-    ),
-```
+
 
 ## Sample usage
 ```php
 	
 	// adding params
 	Yii::app()->jii->addParam('integer', 10);
-
-	Yii::app()->jii->addParam('unsigned_integer', -10);
-
-	Yii::app()->jii->addParam('unsigned_float', 451.239873);
-
-	Yii::app()->jii->addParam('signed_float', -309.0092927);
-
-	Yii::app()->jii->addParam('bool_false', false);
-
-	Yii::app()->jii->addParam('bool_true', true);
-
-	Yii::app()->jii->addParam('string', '<h1>Title</h1><a href="#">link</a>');
-	
-	Yii::app()->jii->addParam('associative_array', array('goofy' => 3409879, '+349287//' => '<a>link</a>'));
-
-	Yii::app()->jii->addParam('numeric_array', array(0, 1, -39, -938.2223, '<a href="#">Test</a>', true));
-
-	Yii::app()->jii->addParam('object', $object);
 
 	// adding urls
 	Yii::app()->jii->addUrl('view_test_url', $this->createUrl('test/view', array('id' => 1)));
@@ -100,15 +73,18 @@ Copy Jii.php to /path/to/application/protected/components and add the following 
 	Yii::app()->jii->addFunction('function', 'function(){ alert("This is an alert!"); }');
 	
 ```
-## Add Jii to your dynamic page
-Adding Jii to your page can be done as follows:
+
+## Adding binding (since 0.0.4)
+You can add functions that will be executed once the page has finished loading in the followin way:
 ```php
-	Yii::app()->clientScript->registerScript('jii', Yii::app()->jii->getScript(), CClientScript::POS_END);
+// the following function will be called once the document is ready
+Yii::app()->jii->addBindings('function(){
+	alert('Page loading has finished');
+}');
 ```
 
 ## Adding CActiveRecord to Jii
 As regards CActiveRecord instances (or class instances inheriting from CModel), you can select which attribute you want Javascript have access to by adding the following method to each of the CActiveRecord class files you wish to convert ...
-
 ```php
 	...
 	public function getJsonizeables()
