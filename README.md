@@ -4,8 +4,6 @@ Javascript library for Yii
 You can use it to convert PHP variables (numbers, strings, booleans, array, objects) to their Javascript equivalents.
 A *jii* object will be created on the javascript global scope and it will contain everything you add.
 
-## Jii 0.0.4 configuration
-You can now configure jii to add *Knockout js* support:
 ## Configuring Yii
 Copy Jii directory to /path/to/application/protected/components and add the following lines to your config/main.php:
 ```php
