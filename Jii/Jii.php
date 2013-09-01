@@ -27,7 +27,7 @@ class Jii extends CComponent
 
 		$jsPath = __DIR__ . DIRECTORY_SEPARATOR . 'js';
 
-		$jii_js = Yii::app()->assetManager->publish( $jsPath .  $this->config['script']);
+		$jii_js = Yii::app()->assetManager->publish( $jsPath . DIRECTORY_SEPARATOR .  $this->config['script']);
 		
 		// registers jii
 		Yii::app()->clientScript->registerScriptFile($jii_js, CClientScript::POS_END);
